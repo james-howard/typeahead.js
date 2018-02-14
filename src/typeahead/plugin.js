@@ -174,6 +174,14 @@
         return this;
       }
     },
+    
+    updateMenu: function updateMenu() {
+      ttEach(this, function(typeahead) {
+        typeahead.updateMenu();
+      });
+
+      return this;
+    },
 
     destroy: function destroy() {
       ttEach(this, function(typeahead, $input) {

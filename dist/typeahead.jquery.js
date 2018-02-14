@@ -1,7 +1,7 @@
 /*!
  * typeahead.js 0.11.1
  * https://github.com/twitter/typeahead.js
- * Copyright 2013-2015 Twitter, Inc. and other contributors; Licensed MIT
+ * Copyright 2013-2018 Twitter, Inc. and other contributors; Licensed MIT
  */
 
 (function(root, factory) {
@@ -9,10 +9,10 @@
         define("typeahead.js", [ "jquery" ], function(a0) {
             return factory(a0);
         });
-    } else if (typeof exports === "object") {
+    } else if (typeof module === "object" && module.exports) {
         module.exports = factory(require("jquery"));
     } else {
-        factory(jQuery);
+        factory(root["jQuery"]);
     }
 })(this, function($) {
     var _ = function() {
@@ -958,9 +958,9 @@
                 var $selectable = this._getSelectables().first();
                 return $selectable.length ? $selectable : null;
             },
-            update: function update(query) {
+            update: function update(query, force) {
                 var isValidUpdate = query !== this.query;
-                if (isValidUpdate) {
+                if (isValidUpdate || force) {
                     this.query = query;
                     _.each(this.datasets, updateDataset);
                 }
@@ -1289,6 +1289,11 @@
                 }
                 return false;
             },
+            updateMenu: function updateMenu() {
+                var query = this.input.getQuery();
+                this.menu.update(query, true);
+                this._updateHint();
+            },
             destroy: function destroy() {
                 this.input.destroy();
                 this.menu.destroy();
@@ -1454,6 +1459,12 @@
                     });
                     return this;
                 }
+            },
+            updateMenu: function updateMenu() {
+                ttEach(this, function(typeahead) {
+                    typeahead.updateMenu();
+                });
+                return this;
             },
             destroy: function destroy() {
                 ttEach(this, function(typeahead, $input) {

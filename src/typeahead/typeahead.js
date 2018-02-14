@@ -412,6 +412,12 @@ var Typeahead = (function() {
 
       return false;
     },
+    
+    updateMenu: function updateMenu() {
+      var query = this.input.getQuery();
+      this.menu.update(query, true);
+      this._updateHint();
+    },
 
     destroy: function destroy() {
       this.input.destroy();
